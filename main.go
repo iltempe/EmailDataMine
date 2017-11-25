@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"encoding/csv"
 	"fmt"
 	"io"
 	"log"
@@ -16,7 +17,7 @@ func emailSplit(data []byte, atEOF bool) (advance int, token []byte, err error) 
 	}
 
 	//una linea vuota e "From " dividono i messaggi
-	// vedere https://en.wikipedia.org/wiki/Mbox#Family
+	//vedi https://en.wikipedia.org/wiki/Mbox#Family
 	if i := strings.Index(string(data), "\n\nFrom "); i >= 0 {
 		return i + 1, data[0:i], nil
 	}
@@ -44,7 +45,10 @@ func readEmail(b []byte) {
 		return
 	}
 
-	fmt.Println("From:", msg.Header.Get("From"))
+	fmt.Println("Subject:", msg.Header.Get("Subject"))
+	//stampa su CSV i dati
+	var data = []string{msg.Header.Get("Subject")}
+	csvWriter(data)
 }
 
 func emailScanner(mbox io.Reader) {
@@ -72,6 +76,17 @@ func emailScanner(mbox io.Reader) {
 	readEmail(msg)
 
 	fmt.Println("Total emails:", count)
+}
+
+func csvWriter(yourSliceGoesHere []string) {
+	f, err := os.OpenFile("data.csv", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	if err != nil {
+		fmt.Println("Error: ", err)
+		return
+	}
+	w := csv.NewWriter(f)
+	w.Write(yourSliceGoesHere)
+	w.Flush()
 }
 
 func main() {
