@@ -29,7 +29,7 @@ func emailSplit(data []byte, atEOF bool) (advance int, token []byte, err error) 
 
 func readEmail(b []byte) {
 	// per leggere una mail sono da rimuovere
-	// le righe nuoe e il "From "
+	// le righe nuove e il "From "
 	const NL = "\n"
 	trimmed := strings.TrimLeft(string(b), NL)
 	var msgString string
