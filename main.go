@@ -89,6 +89,7 @@ func csvWriter(yourSliceGoesHere []string) {
 	w.Flush()
 }
 
+//da lanciare con go run main.go archiviomail.mbox
 func main() {
 	if len(os.Args) != 2 {
 		log.Fatalln("Usage:", os.Args[0], "<filename>")
